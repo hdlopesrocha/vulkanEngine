@@ -18,16 +18,18 @@ long IcosaptreeNode::total()
 	for (int i = 0; i < NODES; ++i) {
 		IcosaptreeNode * child = readChild(this, i);
 		if (child != NULL) {
-			sum += 1 + child->total();
+			sum += child->total();
 		}
 	}
-	return sum;
+	return sum + 1;
 }
 
 int usedChilds(IcosaptreeNode * node) {
 	int n = 0;
 	for (int i = 0; i < NODES; ++i) {
-		++n;
+		if(node->child[i]!=NULL){
+			++n;
+		}
 	}
 	return n;
 }
@@ -137,6 +139,29 @@ IcosaptreeNode * getContainingNode(IcosaptreeNode * node, BoundingSphere sphere)
 	}
 }
 
+void internalDelete(IcosaptreeNode * node){
+	for(int i=0;i < node->objects.size(); ++i){
+		delete node->objects[i];
+	}
+	node->objects.clear();
+	for(int i=0;i < NODES; ++i){
+		IcosaptreeNode * child = node->child[i];
+		if(child!=NULL){
+			internalDelete(child);
+		}
+	}
+
+
+	delete node;
+}
+
+Icosaptree * Icosaptree::clear()
+{
+	internalDelete(root);
+	return this;
+}
+
+
 Icosaptree::Icosaptree(int mns)
 {
 	root = new IcosaptreeNode(NULL, Vector3(), 1);
@@ -162,6 +187,9 @@ IcosaptreeNode::IcosaptreeNode(IcosaptreeNode * parent, Vector3 corner, float si
 	this->corner = corner;
 	this->size = size;
 	this->parent = parent;
+	for(int i=0; i < NODES; ++i){
+		this->child[i] = NULL;
+	}
 }
 
 bool IcosaptreeNode::intersects(BoundingSphere sphere) {

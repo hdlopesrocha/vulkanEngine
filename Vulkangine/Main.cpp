@@ -17,7 +17,8 @@ int main(int argc, char ** argv) {
 	std::cout << "ready" << std::endl;
 	std::cout << "IcosaptreeNode " << sizeof(IcosaptreeNode) << std::endl;
 	std::cout << "Nodes " << tree->root->total() << std::endl;
-
+	std::cout << "Root " << tree->root->toString() << std::endl;
+	delete tree->clear();
 	getchar();
 	return 0;
 }

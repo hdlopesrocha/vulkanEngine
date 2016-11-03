@@ -42,6 +42,7 @@ public:
 	Icosaptree(int minNodeSize);
 	void expand(BoundingSphere sphere);
 	void insert(AbstractObject * object);
+	Icosaptree * clear();
 };
 
 #endif
