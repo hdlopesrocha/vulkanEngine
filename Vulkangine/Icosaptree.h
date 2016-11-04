@@ -13,6 +13,16 @@ class Icosaptree;
 #include <map>
 #include <unordered_set>
 
+class TreeStats {
+public:
+	long numberOfNodes;
+	float averageUsage;
+	long nodesWithObjects;
+	long leafNodes;
+	std::string toString();
+
+	TreeStats();
+};
 
 class IcosaptreeNode {
 public:
@@ -33,7 +43,6 @@ public:
 	bool canSplit();
 
 	std::string toString();
-	long total();
 };
 
 class Icosaptree {
@@ -43,6 +52,8 @@ public:
 	void expand(BoundingSphere sphere);
 	void insert(AbstractObject * object);
 	Icosaptree * clear();
+	TreeStats stats();
+
 };
 
 #endif

@@ -12,16 +12,22 @@ IcosaptreeNode * readChild(IcosaptreeNode * parent, int index) {
 }
 
 
-long IcosaptreeNode::total()
+void statsInternal(IcosaptreeNode * node,TreeStats * stats)
 {
-	long sum = 0;
+	int childNotNull =0;
 	for (int i = 0; i < NODES; ++i) {
-		IcosaptreeNode * child = readChild(this, i);
+		IcosaptreeNode * child = readChild(node, i);
 		if (child != NULL) {
-			sum += child->total();
+			++childNotNull;
+			statsInternal(child,stats);
 		}
 	}
-	return sum + 1;
+	if (childNotNull == 0) {
+		++stats->leafNodes;
+	}
+	stats->nodesWithObjects += node->objects.size()>0?1:0;
+	stats->averageUsage += childNotNull;
+	++stats->numberOfNodes;
 }
 
 int usedChilds(IcosaptreeNode * node) {
@@ -161,6 +167,19 @@ Icosaptree * Icosaptree::clear()
 	return this;
 }
 
+TreeStats Icosaptree::stats()
+{
+	TreeStats result;
+	statsInternal(root, &result);
+	if(result.numberOfNodes!=0){
+		result.averageUsage /= NODES * result.numberOfNodes;
+	}
+	else {
+		result.averageUsage = 0;
+	}
+	return result;
+}
+
 
 Icosaptree::Icosaptree(int mns)
 {
@@ -240,4 +259,16 @@ void Icosaptree::expand(BoundingSphere sphere)
 			break;
 		}
 	}
+}
+
+std::string TreeStats::toString()
+{
+	std::stringstream ss;
+	ss << "{\"numberOfNodes\":" << this->numberOfNodes << ",\"averageUsage\":" << averageUsage << ",\"nodesWithObjects\":" << nodesWithObjects << ",\"leafNodes\":" << leafNodes << "}";
+	return ss.str();
+}
+
+TreeStats::TreeStats()
+{
+	numberOfNodes = averageUsage = nodesWithObjects = leafNodes =0;
 }
