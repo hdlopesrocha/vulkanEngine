@@ -28,7 +28,7 @@ class IcosaptreeNode {
 public:
 	IcosaptreeNode * parent;
 	IcosaptreeNode * child[27];
-	//std::unordered_map<char, IcosaptreeNode *> child;
+	//std::unordered_map<int, IcosaptreeNode *> child;
 	//std::map<int, IcosaptreeNode *> child;
 	//std::vector<IcosaptreeNode*> child;
 
